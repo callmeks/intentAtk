@@ -109,32 +109,10 @@ fun HandleIntent1(onIntentHandled: () -> Unit) {
     val startForResult = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
-        // Handle result if needed
         Log.d("IntentDump", "Received result ${result}")
         Utils.showDialog(context, result.data)
-        if (result.resultCode == Activity.RESULT_OK) {
-            val intent = result.data
-            if (intent != null) {
-                // Use the dumpIntent method from Utils to log the intent details
-                val intentDetails = Utils.dumpIntent(context, intent)
-                Log.d("IntentDump", intentDetails)
-
-                // Alternatively, show a dialog with the intent details
-                Utils.showDialog(context, intent)
-            } else {
-                Log.d("IntentDump", "Received intent is null")
-            }
-        } else {
-            Log.d("IntentDump", "Result code is not OK")
-        }
-
-
-        // Call the callback after handling the intent
         onIntentHandled()
-
     }
-
-    // Create and launch the intent
     LaunchedEffect(Unit) {
         val intent = Intent().apply {
             setClassName(
@@ -576,7 +554,7 @@ fun HandleIntent9(onIntentHandled: () -> Unit) {
 @Composable
 fun HandleIntent10(onIntentHandled: () -> Unit) {
     //this is just button to trigger the activity that cant export
-    // solution = the RecvIntent.kt and the Android manifest activity
+    // solution = the RecvIntent10to12.kt and the Android manifest activity
     val context = LocalContext.current
     val startForResult = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
