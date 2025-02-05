@@ -4,7 +4,8 @@
 
 ## Flag 13
 
-- change the search url to `hex://flag?action=give-me`
+- change the search url to `hex://flag?action=give-me` (need to use chrome)
+- i create a flag 13 button that could work as intented
 
 ## Flag 14
 
