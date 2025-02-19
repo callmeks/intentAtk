@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <queries>
+        <package android:name="io.hextree.attacksurface" />
+    </queries>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,6 +16,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IntentAtk"
         tools:targetApi="31">
+        <provider
+            android:name=".AtkIntent40Provider"
+            android:authorities="io.ks.intentatk.AtkIntent40Provider"
+            android:enabled="true"
+            android:exported="false"
+            android:grantUriPermissions="true"/>
+        <provider
+            android:name=".AtkIntent37Provider"
+            android:authorities="io.ks.intentatk.AtkIntent37Provider"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity
             android:name=".HextreeActivity"
             android:exported="true"
@@ -42,10 +58,20 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-    </application>
+        <activity
+            android:name=".RecvIntent33"
+            android:exported="true"
+            android:theme="@style/Theme.IntentAtk">
+            <intent-filter>
+                <action android:name="io.hextree.FLAG33" />
 
-    <queries>
-        <package android:name="io.hextree.attacksurface" />
-    </queries>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="io.hextree.flag33_2"
+                    android:scheme="content" />
+            </intent-filter>
+        </activity>
+    </application>
 
 </manifest>
