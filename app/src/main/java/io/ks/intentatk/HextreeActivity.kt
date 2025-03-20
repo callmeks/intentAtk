@@ -170,22 +170,14 @@ fun HandleIntentCam(onImageCaptured: (Bitmap) -> Unit) {
 @Composable
 fun HandleIntent1(onIntentHandled: () -> Unit) {
     val context = LocalContext.current
-    val startForResult = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result: ActivityResult ->
-        Log.d("IntentDump", "Received result ${result}")
-        Utils.showDialog(context, result.data)
-        onIntentHandled()
+    val intent = Intent().apply {
+        setClassName(
+            "io.hextree.attacksurface",
+            "io.hextree.attacksurface.activities.Flag1Activity"
+        )
     }
-    LaunchedEffect(Unit) {
-        val intent = Intent().apply {
-            setClassName(
-                "io.hextree.attacksurface",
-                "io.hextree.attacksurface.activities.Flag1Activity"
-            )
-        }
-        startForResult.launch(intent)
-    }
+    context.startActivity(intent)
+    onIntentHandled()
 }
 
 @Composable
